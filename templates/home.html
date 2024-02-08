@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LeaseManagement</title>
+    <form id="addForm" method="post" action="{% url 'home' %}">
+    {% csrf_token %}
+         <div>
+
+        <input type="text" name="addCompany" required>
+        <button type="submit" name="register_company">Register Your Company</button>
+         </div>
+
+    </form>
+    <form id="empForm" method="post" action="{% url 'home' %}">
+    {% csrf_token %}
+    <div>
+        <label for="company">Select Company and Enter Employee name:</label>
+        <select id="company" name="company">
+            {% for company in companies %}
+                <option value="{{ company.company }}">{{ company.company }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" name="addEmployee" required>
+        <button type="submit" name="register_employee">Register Employee</button>
+    </div>
+</form>
+ </form>
+    <form id="devForm" method="post" action="{% url 'home' %}">
+    {% csrf_token %}
+    <div>
+        <label for="company">Select Company and Enter Device name:</label>
+        <select id="company" name="company">
+            {% for company in companies %}
+                <option value="{{ company.company }}">{{ company.company }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" name="addDevice" required>
+        <button type="submit" name="register_Device">Register Device</button>
+    </div>
+</form>
+
+</head>
+<body>
+
+</body>
+</html>

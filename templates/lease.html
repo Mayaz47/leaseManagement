@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lease Management</title>
+    <form id="addLease" method="post" action="{% url 'lease' %}">
+    {% csrf_token %}
+         <div>
+
+        <label for="company">Select Company :</label>
+        <select id="company" name="company" onchange="changeOptions()">
+            {% for company in companies %}
+                <option value="{{ company.company }}">{{ company.company }}</option>
+            {% endfor %}
+        </select>
+        </div>
+        <div>
+        <label for="empFrom"> From:</label>
+        <select id="empFrom" name="empFrom" >
+            <option value="O">None</option>
+        </select>
+        </div>
+        <select id="empTo" name="empTo" >
+            <option value="O">None</option>
+        </select>
+        <div>
+        <select id="device" name="device" >
+            <option value="O">None</option>
+        </select>
+         </div>
+        <div>
+        <select id="action" name="action" >
+            <option value="A">Lease</option>
+            <option value="B">Return</option>
+        </select>
+        </div>
+        <div>
+        <select id="status" name="status" >
+            <option value="A">Perfect</option>
+            <option value="B">Damaged</option>
+            <option value="C">Out of Action</option>
+        </select>
+        </div>
+    <div>
+         <button type="submit">Submit</button>
+
+   </div>
+
+   </form>
+   <script>
+        var employees = {{ employees|safe }};
+        var devices = {{ devices|safe }};
+        function changeOptions() {
+            var selectedCompany = document.getElementById("company").value;
+            var empFromDropdown = document.getElementById("empFrom");
+            var empToDropdown= document.getElementById("empTo");
+            var deviceDropdown = document.getElementById("device");
+            empFromDropdown.innerHTML = "";
+            empToDropdown.innerHTML = "";
+            deviceDropdown.innerHTML = "";
+
+            employees.forEach(function(employee) {
+            console.log( employee.fields.company_name );
+            console.log(selectedCompany);
+            if (employee.fields.company_name === selectedCompany) {
+                console.log("match found");
+                var optionFrom = document.createElement("option");
+                var optionTo = document.createElement("option");
+                optionFrom.text = employee.fields.name;
+                optionTo.text = employee.fields.name;
+                empFromDropdown.add(optionFrom);
+                empToDropdown.add(optionTo);
+            }
+        });
+
+        devices.forEach(function(device) {
+            if (device.fields.company_name === selectedCompany) {
+                var optionDevice = document.createElement("option");
+                optionDevice.text = device.fields.name;
+                deviceDropdown.add(optionDevice);
+            }
+        });
+
+
+    }
+    </script>
+
+
+</head>
+<body>
+
+</body>
+</html>

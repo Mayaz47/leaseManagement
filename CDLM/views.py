@@ -1,9 +1,16 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from CDLM.models import *
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from django.core.serializers import serialize
+from django.http import JsonResponse
+
 # Create your views here.
 
 c = Company.objects.all()
+e = Employee.objects.all()
+d = Device.objects.all()
 def home(request):
     if request.method == 'POST':
         if 'register_company' in request.POST:
@@ -42,3 +49,41 @@ def home(request):
     else:
 
         return render(request, 'home.html', {'companies': c})
+
+def lease(request):
+    if request.method == 'POST':
+        # Get data from the form submission
+        company = request.POST['company']
+        employee_from = request.POST['empFrom']
+        employee_to = request.POST['empTo']
+        device_name= request.POST['device']
+        action  = request.POST['action']
+        status = request.POST['status']
+
+
+
+        new_data = Lease(
+            company=company,
+            employee_from=employee_from,
+            employee_to=employee_to,
+            device_name=device_name,
+            action=action,
+            status=status,
+
+
+        )
+
+        # Save the new data to the database
+        new_data.save()
+
+        # Redirect to the display_data view after adding data
+        return HttpResponse("Success")
+    else:
+        employees_json = serialize('json', e)
+        device_json = serialize('json', d)
+        context = {
+            'companies': c,
+            'employees': employees_json,
+            'devices': device_json ,
+        }
+        return render(request, 'lease.html', context)

@@ -21,7 +21,7 @@
                 <option value="{{ company.company }}">{{ company.company }}</option>
             {% endfor %}
         </select>
-        <input type="text" name="addEmployee" required>
+        <input type="text" name="addEmployee" >
         <button type="submit" name="register_employee">Register Employee</button>
     </div>
 </form>
@@ -35,11 +35,12 @@
                 <option value="{{ company.company }}">{{ company.company }}</option>
             {% endfor %}
         </select>
-        <input type="text" name="addDevice" required>
+        <input type="text" name="addDevice" >
         <button type="submit" name="register_Device">Register Device</button>
     </div>
-</form>
 
+</form>
+<a href="{% url 'lease' %}"><button>Manage Leased Devices</button></a>
 </head>
 <body>
 

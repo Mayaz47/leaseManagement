@@ -32,4 +32,4 @@ class Lease(models.Model):
     device_name = models.CharField(max_length=255)
     action = models.CharField(max_length=255)
     status = models.CharField(max_length=255)
-    date = models.DateTimeField(default=now, editable=False)
+    date = models.DateTimeField(default=now)

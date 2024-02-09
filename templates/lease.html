@@ -7,57 +7,105 @@
     {% csrf_token %}
          <div>
 
-        <label for="company">Select Company :</label>
+        <label for="company">Select Company :  </label>
         <select id="company" name="company" onchange="changeOptions()">
+            <option value="O">None</option>
             {% for company in companies %}
                 <option value="{{ company.company }}">{{ company.company }}</option>
             {% endfor %}
         </select>
         </div>
         <div>
-        <label for="empFrom"> From:</label>
+        <label for="empFrom"> From :  </label>
         <select id="empFrom" name="empFrom" >
             <option value="O">None</option>
         </select>
         </div>
+        <label for="empTo"> To :  </label>
         <select id="empTo" name="empTo" >
             <option value="O">None</option>
         </select>
         <div>
+         <label for="device"> Device :  </label>
         <select id="device" name="device" >
             <option value="O">None</option>
         </select>
          </div>
         <div>
+       <label for="action"> Action :  </label>
         <select id="action" name="action" >
-            <option value="A">Lease</option>
-            <option value="B">Return</option>
+
+            <option value="None">None</option>
+            <option value="Lease">Lease</option>
+            <option value="Return">Return</option>
         </select>
         </div>
         <div>
+         <label for="status"> Condition :  </label>
         <select id="status" name="status" >
-            <option value="A">Perfect</option>
-            <option value="B">Damaged</option>
-            <option value="C">Out of Action</option>
+            <option value="None">None</option>
+            <option value="Perfect">Perfect</option>
+            <option value="Damaged">Damaged</option>
+            <option value="Out of Action">Out of Action</option>
         </select>
         </div>
     <div>
-         <button type="submit">Submit</button>
+         <button type="submit" name="add_lease">Add Lease Data</button>
 
    </div>
 
    </form>
+    <form id="clear" method="post" action="{% url 'lease' %}">
+     {% csrf_token %}
+    <div>
+         <button type="submit" name="clear">Clear Previous Data</button>
+
+   </div>
+    </form>
+    <label for="company2">Select Company :  </label>
+        <select id="company2" name="company2" onchange="changeTable()">
+            <option value="O">None</option>
+            {% for company in companies %}
+                <option value="{{ company.company }}">{{ company.company }}</option>
+            {% endfor %}
+        </select>
+     <table id="table" border="1">
+        <thead>
+         <tr>
+            <th>Company</th>
+            <th>Taken from</th>
+            <th>Given to</th>
+            <th>Device</th>
+            <th>Action</th>
+            <th>Condition</th>
+            <th>Time</th>
+
+            <!-- Add more columns if needed -->
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+       </table>
    <script>
         var employees = {{ employees|safe }};
         var devices = {{ devices|safe }};
+        var lease = {{ lease|safe }};
         function changeOptions() {
             var selectedCompany = document.getElementById("company").value;
             var empFromDropdown = document.getElementById("empFrom");
             var empToDropdown= document.getElementById("empTo");
             var deviceDropdown = document.getElementById("device");
-            empFromDropdown.innerHTML = "";
-            empToDropdown.innerHTML = "";
-            deviceDropdown.innerHTML = "";
+            empFromDropdown.innerHTML = '';
+            empToDropdown.innerHTML = '';
+            deviceDropdown.innerHTML = '';
+
+
+            var noneOption = document.createElement("option");
+            noneOption.text = 'None';
+
+            empFromDropdown.appendChild(noneOption.cloneNode(true));
+            empToDropdown.appendChild(noneOption.cloneNode(true));
+            deviceDropdown.appendChild(noneOption.cloneNode(true));
 
             employees.forEach(function(employee) {
             console.log( employee.fields.company_name );
@@ -83,11 +131,51 @@
 
 
     }
+        function changeTable() {
+            var selectedCompany = document.getElementById("company2").value;
+            var table = document.getElementById("table").getElementsByTagName('tbody')[0];
+            table.innerHTML = '';
+            lease.forEach(function(le) {
+            console.log( le.fields.company );
+            console.log(selectedCompany);
+            if (le.fields.company === selectedCompany) {
+                console.log("match found");
+                var newRow = table.insertRow(table.rows.length);
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
+                var cell4 = newRow.insertCell(3);
+                var cell5 = newRow.insertCell(4);
+                var cell6 = newRow.insertCell(5);
+                var cell7 = newRow.insertCell(6);
+                cell1.innerHTML = le.fields.company;
+                cell2.innerHTML = le.fields.employee_from;
+                cell3.innerHTML = le.fields.employee_to;
+                cell4.innerHTML = le.fields.device_name;
+                cell5.innerHTML = le.fields.action;
+                cell6.innerHTML = le.fields.status;
+                var date = new Date(le.fields.date);
+            newRow.insertCell().textContent = formatDate(date); // Format the date as needed
+        }
+    });
+}
+
+// Function to format date
+        function formatDate(date) {
+            // Example: "09/02/2024 12:30 PM"
+            var options = {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            };
+            return date.toLocaleString('en-US', options);
+}
     </script>
 
 
 </head>
-<body>
 
-</body>
 </html>

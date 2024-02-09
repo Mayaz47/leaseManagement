@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from CDLM.models import *
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -8,10 +8,10 @@ from django.http import JsonResponse
 
 # Create your views here.
 
-c = Company.objects.all()
-e = Employee.objects.all()
-d = Device.objects.all()
+
+
 def home(request):
+    c = Company.objects.all()
     if request.method == 'POST':
         if 'register_company' in request.POST:
             doop = True
@@ -51,39 +51,54 @@ def home(request):
         return render(request, 'home.html', {'companies': c})
 
 def lease(request):
+    c = Company.objects.all()
+    e = Employee.objects.all()
+    d = Device.objects.all()
+    l = Lease.objects.all()
+    employees_json = serialize('json', e)
+    device_json = serialize('json', d)
+    lease_json = serialize('json', l)
+    context = {
+        'companies': c,
+        'employees': employees_json,
+        'devices': device_json,
+        'lease': lease_json,
+    }
     if request.method == 'POST':
-        # Get data from the form submission
-        company = request.POST['company']
-        employee_from = request.POST['empFrom']
-        employee_to = request.POST['empTo']
-        device_name= request.POST['device']
-        action  = request.POST['action']
-        status = request.POST['status']
+        if 'add_lease' in request.POST:
+            # Get data from the form submission
+            company = request.POST['company']
+            employee_from = request.POST['empFrom']
+            employee_to = request.POST['empTo']
+            device_name= request.POST['device']
+            action  = request.POST['action']
+            status = request.POST['status']
 
 
 
-        new_data = Lease(
-            company=company,
-            employee_from=employee_from,
-            employee_to=employee_to,
-            device_name=device_name,
-            action=action,
-            status=status,
+            new_data = Lease(
+                company=company,
+                employee_from=employee_from,
+                employee_to=employee_to,
+                device_name=device_name,
+                action=action,
+                status=status,
 
 
-        )
+            )
 
-        # Save the new data to the database
-        new_data.save()
+            # Save the new data to the database
+            new_data.save()
 
-        # Redirect to the display_data view after adding data
-        return HttpResponse("Success")
+            # Redirect to the display_data view after adding data
+            return redirect('lease')
+        elif 'clear' in request.POST:
+            latest_entry = Lease.objects.latest('id')
+            # Delete the latest entry
+            latest_entry.delete()
+            # Redirect to the same page after deletion
+            return redirect('lease')
+
     else:
-        employees_json = serialize('json', e)
-        device_json = serialize('json', d)
-        context = {
-            'companies': c,
-            'employees': employees_json,
-            'devices': device_json ,
-        }
+
         return render(request, 'lease.html', context)

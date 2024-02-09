@@ -10,8 +10,8 @@
         <label for="company">Select Company :  </label>
         <select id="company" name="company" onchange="changeOptions()">
             <option value="O">None</option>
-            {% for company in companies %}
-                <option value="{{ company.company }}">{{ company.company }}</option>
+            {% for company_dict in companies.company %}
+                    <option value="{{ company_dict.company }}">{{ company_dict.company }}</option>
             {% endfor %}
         </select>
         </div>
@@ -62,11 +62,11 @@
 
    </div>
     </form>
-    <label for="company2">Select Company :  </label>
+    <label for="company2">Your Company ? :  </label>
         <select id="company2" name="company2" onchange="changeTable()">
             <option value="O">None</option>
-            {% for company in companies %}
-                <option value="{{ company.company }}">{{ company.company }}</option>
+            {% for company_dict in companies.company %}
+                    <option value="{{ company_dict.company }}">{{ company_dict.company }}</option>
             {% endfor %}
         </select>
      <table id="table" border="1">
@@ -90,6 +90,7 @@
         var employees = {{ employees|safe }};
         var devices = {{ devices|safe }};
         var lease = {{ lease|safe }};
+        console.log(typeof employees)
         function changeOptions() {
             var selectedCompany = document.getElementById("company").value;
             var empFromDropdown = document.getElementById("empFrom");
@@ -107,24 +108,24 @@
             empToDropdown.appendChild(noneOption.cloneNode(true));
             deviceDropdown.appendChild(noneOption.cloneNode(true));
 
-            employees.forEach(function(employee) {
-            console.log( employee.fields.company_name );
+            employees[0]['employee'].forEach(function(employee) {
+            console.log( employee.company_name );
             console.log(selectedCompany);
-            if (employee.fields.company_name === selectedCompany) {
+            if (employee.company_name === selectedCompany) {
                 console.log("match found");
                 var optionFrom = document.createElement("option");
                 var optionTo = document.createElement("option");
-                optionFrom.text = employee.fields.name;
-                optionTo.text = employee.fields.name;
+                optionFrom.text = employee.name;
+                optionTo.text = employee.name;
                 empFromDropdown.add(optionFrom);
                 empToDropdown.add(optionTo);
             }
         });
 
-        devices.forEach(function(device) {
-            if (device.fields.company_name === selectedCompany) {
+        devices[0]['device'].forEach(function(device) {
+            if (device.company_name === selectedCompany) {
                 var optionDevice = document.createElement("option");
-                optionDevice.text = device.fields.name;
+                optionDevice.text = device.name;
                 deviceDropdown.add(optionDevice);
             }
         });
@@ -135,10 +136,10 @@
             var selectedCompany = document.getElementById("company2").value;
             var table = document.getElementById("table").getElementsByTagName('tbody')[0];
             table.innerHTML = '';
-            lease.forEach(function(le) {
-            console.log( le.fields.company );
+            lease[0]['lease'].forEach(function(le) {
+            console.log( le.company );
             console.log(selectedCompany);
-            if (le.fields.company === selectedCompany) {
+            if (le.company === selectedCompany) {
                 console.log("match found");
                 var newRow = table.insertRow(table.rows.length);
                 var cell1 = newRow.insertCell(0);
@@ -148,13 +149,13 @@
                 var cell5 = newRow.insertCell(4);
                 var cell6 = newRow.insertCell(5);
                 var cell7 = newRow.insertCell(6);
-                cell1.innerHTML = le.fields.company;
-                cell2.innerHTML = le.fields.employee_from;
-                cell3.innerHTML = le.fields.employee_to;
-                cell4.innerHTML = le.fields.device_name;
-                cell5.innerHTML = le.fields.action;
-                cell6.innerHTML = le.fields.status;
-                var date = new Date(le.fields.date);
+                cell1.innerHTML = le.company;
+                cell2.innerHTML = le.employee_from;
+                cell3.innerHTML = le.employee_to;
+                cell4.innerHTML = le.device_name;
+                cell5.innerHTML = le.action;
+                cell6.innerHTML = le.status;
+                var date = new Date(le.date);
             newRow.insertCell().textContent = formatDate(date); // Format the date as needed
         }
     });

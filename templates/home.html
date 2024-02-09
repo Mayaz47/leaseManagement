@@ -3,44 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>LeaseManagement</title>
-    <form id="addForm" method="post" action="{% url 'home' %}">
-    {% csrf_token %}
-         <div>
-
-        <input type="text" name="addCompany" required>
-        <button type="submit" name="register_company">Register Your Company</button>
-         </div>
-
-    </form>
-    <form id="empForm" method="post" action="{% url 'home' %}">
-    {% csrf_token %}
-    <div>
-        <label for="company">Select Company and Enter Employee name:</label>
-        <select id="company" name="company">
-            {% for company in companies %}
-                <option value="{{ company.company }}">{{ company.company }}</option>
-            {% endfor %}
-        </select>
-        <input type="text" name="addEmployee" >
-        <button type="submit" name="register_employee">Register Employee</button>
-    </div>
-</form>
- </form>
-    <form id="devForm" method="post" action="{% url 'home' %}">
-    {% csrf_token %}
-    <div>
-        <label for="company">Select Company and Enter Device name:</label>
-        <select id="company" name="company">
-            {% for company in companies %}
-                <option value="{{ company.company }}">{{ company.company }}</option>
-            {% endfor %}
-        </select>
-        <input type="text" name="addDevice" >
-        <button type="submit" name="register_Device">Register Device</button>
-    </div>
-
-</form>
-<a href="{% url 'lease' %}"><button>Manage Leased Devices</button></a>
 </head>
+<body>
+    <form id="addForm" method="post" action="{% url 'home' %}">
+        {% csrf_token %}
+        <div>
+            <label for="addCompany">Enter Company Name:</label>
+            <input type="text" id="addCompany" name="addCompany" required>
+            <button type="submit" name="register_company">Register Your Company</button>
+        </div>
+    </form>
 
+    <form id="empForm" method="post" action="{% url 'home' %}">
+        {% csrf_token %}
+        <div>
+            <label for="company">Select Company and Enter Employee name:</label>
+            <select id="companyEmp" name="company">
+                {% for company_dict in companies.company %}
+                    <option value="{{ company_dict.company }}">{{ company_dict.company }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" name="addEmployee" required>
+            <button type="submit" name="register_employee">Register Employee</button>
+        </div>
+    </form>
+
+    <form id="devForm" method="post" action="{% url 'home' %}">
+        {% csrf_token %}
+        <div>
+            <label for="companyDev">Select Company and Enter Device name:</label>
+            <select id="companyDev" name="company">
+                {% for company_dict in companies.company %}
+                    <option value="{{ company_dict.company }}">{{ company_dict.company }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" name="addDevice" required>
+            <button type="submit" name="register_Device">Register Device</button>
+        </div>
+    </form>
+
+<a href="{% url 'lease' %}"><button>Manage Leased Devices</button></a>
+</body>
 </html>
